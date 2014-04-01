@@ -1,0 +1,90 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'author_compare/style.css' %}" />
+<head>
+<script>
+
+function func_1()
+  {
+	var e = document.getElementById("author_1");
+	var author_1 = e.options[e.selectedIndex].text;
+	var arr = author_1.split(' ');
+	document.getElementById('img_author_1').src = '/static/author_compare/'+arr[0]+'_'+arr[1]+'.jpg';
+  }
+ function func_2()
+  {
+	var e = document.getElementById("author_2");
+	var author_2 = e.options[e.selectedIndex].text;
+	var arr = author_2.split(' ');
+	document.getElementById('img_author_2').src = '/static/author_compare/'+arr[0]+'_'+arr[1]+'.jpg';
+  }
+
+</script>
+</head>
+
+<div id = 'container'>
+<div id = "header">
+<p>
+Who Do I Write Like
+</p>
+</div>
+
+
+<div id = "instructions">
+Examines your writing style and word choice to see what famous author you write the most
+like. Just input some text, over 1,000 words or more will give the best results, and then either
+select two authors from the right to compare between or choose all to see which author you write 
+most like which will take a couple of seconds to fully run. New authors will be added in the future
+so make sure to come back. 
+</div>
+<form action="." method="POST">
+	<div id='selectors'>
+	{% csrf_token %}
+	<select id="author_1" name ="author_1" onchange="func_1();" onload="func_1();">
+	{% for author in author_list %}
+	<option value="{{author.author}}">{{author.author}}</option>
+	{% endfor %}
+	</select>
+	<img src="/static/author_compare/Ernest_Hemingway.jpg" id = 'img_author_1'>
+	<select id="author_2" name ="author_2" onchange="func_2();"onload="func_2();">
+	{% for author in author_list %}
+	<option value="{{author.author}}">{{author.author}}</option>
+	{% endfor %}
+	</select>
+	<img src="/static/author_compare/Ernest_Hemingway.jpg" id = 'img_author_2'>
+	</div>
+    <textarea name="user_text"></textarea>
+	<div id = 'checkbox'>
+	<input type="checkbox" name="all" value="run_all">Run all authors
+	</div>
+    <input type="submit" value="Submit" />
+</form>
+<div id = 'footer'>
+Developed and designed by Cole Knowlden <br/>
+coknowlden@gmail.com
+</div>
+</div>
+
+
+{% if result_author %}
+
+<div id="overlay">
+     <div id = "inner_overlay">
+		<div id = 'overlay_image'>
+		<img src="" id = 'img_overlay' name = '{{result_author}}'>
+		</div>
+		<div id = 'overlay_text'>
+          You write most like: <br/>
+		  <div id = 'result_text'>{{result_author}}</div>
+		 <a href = ' '><input type="submit" value="Return" /></a>
+		</div>
+		
+     </div>
+</div>
+<script>
+  var e = document.getElementById("img_overlay").name;
+  var arr = e.split(' ');
+  document.getElementById('img_overlay').src = '/static/author_compare/'+arr[0]+'_'+arr[1]+'.jpg';
+ </script>
+{% endif %}
+
+
